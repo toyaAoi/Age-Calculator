@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/images/favicon-32x32.png"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,600;0,700;0,800;1,400;1,800&display=swap"
+      rel="stylesheet"
+    />
+    <title>Frontend Mentor | Age calculator app</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+      }
+
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: hsl(0, 0%, 94%);
+        height: 100vh;
+      }
+
+      .container .main-box {
+        width: 46rem;
+        padding: 3rem;
+        border-radius: 1.5rem 1.5rem 11rem 1.5rem;
+        background-color: hsl(0, 0%, 100%);
+      }
+
+      .container .main-box .inputs {
+        width: 75%;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .container .main-box .inputs .label {
+        color: hsl(0, 1%, 44%);
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      .container .main-box .inputs [class*="empty"],
+      .container .main-box .inputs [class*="invalid"],
+      .container .main-box .inputs .year-future {
+        display: none;
+        font-size: 12px;
+        font-style: italic;
+        font-weight: 100;
+        color: red;
+      }
+
+      .container .main-box .inputs .input {
+        width: 8rem;
+        height: 3.5rem;
+        margin: 0.5rem 0;
+        border: 1px solid hsl(0, 0%, 86%);
+        border-radius: 8px;
+        outline: transparent;
+        padding: 0 1.3rem;
+        font-family: inherit;
+        font-size: 1.6rem;
+        font-weight: 700;
+      }
+
+      .container .main-box .inputs .input::-webkit-outer-spin-button,
+      .container .main-box .inputs .input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      .container .main-box .button {
+        position: relative;
+        height: 5.2rem;
+      }
+
+      .container .main-box .button hr {
+        height: 1px;
+        width: 90%;
+        margin: 2.6rem 0;
+        border: 0;
+        background-color: hsl(0, 0%, 86%);
+        position: absolute;
+      }
+
+      .container .main-box .button button {
+        position: absolute;
+        cursor: pointer;
+        right: 0;
+        height: 5.2rem;
+        width: 5.2rem;
+        background-color: hsl(259, 100%, 65%);
+        border: none;
+        border-radius: 50%;
+      }
+
+      .container .result p {
+        font-size: 5.8rem;
+        font-weight: 800;
+        font-style: italic;
+        word-spacing: -0.5rem;
+        line-height: 1.1;
+      }
+
+      .container .result p span {
+        color: hsl(259, 100%, 65%);
+      }
+
+      .attribution {
+        font-size: 11px;
+        text-align: center;
+      }
+      .attribution a {
+        color: hsl(228, 45%, 44%);
+      }
+
+      .attribution {
+        background-color: gray;
+        color: white;
+      }
+
+      .attribution a {
+        text-decoration: none;
+        color: lightcoral;
+      }
+
+      @media screen and (max-width: 768px) {
+        .container {
+          height: 100svh;
+          display: block;
+        }
+
+        .container .main-box {
+          position: relative;
+          top: 10vh;
+          margin: 0 auto;
+          width: 90%;
+          padding: 1.5rem;
+          border-bottom-right-radius: 8rem;
+        }
+
+        .container .main-box .inputs {
+          margin: 1.5rem 0;
+          width: 100%;
+        }
+
+        .container .main-box .inputs .input {
+          width: 5.5rem;
+          height: 3.2rem;
+          margin-top: 0.25rem;
+          font-size: 1.2rem;
+          padding: 0 0.7rem;
+        }
+        .container .main-box .button {
+          margin-bottom: 1rem;
+        }
+        .container .main-box .button hr {
+          width: 100%;
+        }
+
+        .container .main-box .button button {
+          height: 4.5rem;
+          width: 4.5rem;
+          top: 0.5rem;
+          right: calc(50% - 2.25rem);
+        }
+
+        .container .result {
+          margin: 1.5rem 0;
+        }
+
+        .container .result p {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="main-box">
+        <div class="inputs">
+          <div class="input-date">
+            <p class="err label">Day</p>
+            <input class="dd input" type="number" placeholder="DD" />
+            <p class="date-empty">This field is required</p>
+            <p class="date-invalid">Must be a valid day</p>
+          </div>
+          <div class="input-month">
+            <p class="err label">Month</p>
+            <input class="mm input" type="number" placeholder="MM" />
+            <p class="month-empty">This field is required</p>
+            <p class="month-invalid">Must be a valid month</p>
+          </div>
+          <div class="input-year">
+            <p class="err label">Year</p>
+            <input class="yy input" type="number" placeholder="YYYY" />
+            <p class="year-empty">This field is required</p>
+            <p class="year-invalid">Must be a vaild year</p>
+            <p class="year-future">Must be in the past</p>
+          </div>
+        </div>
+        <div class="button">
+          <hr />
+          <button onclick="calculateAge()">
+            <img src="./assets/images/icon-arrow.svg" />
+          </button>
+        </div>
+        <div class="result">
+          <p><span id="calculated-years">- -</span> years</p>
+          <p><span id="calculated-months">- -</span> months</p>
+          <p><span id="calculated-days">- -</span> days</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="attribution">
+      Challenge by
+      <a href="https://www.frontendmentor.io?ref=challenge" target="_blank"
+        >Frontend Mentor</a
+      >. Coded by <a href="https://www.frontendmentor.io/profile/T0YA">Toya</a>.
+    </div>
+    <script>
+      const currentYear = new Date().getFullYear();
+      const currentMonth = new Date().getMonth() + 1;
+      const currentDate = new Date().getDate();
+      const currentYearLeapYear = !(currentYear % 4);
+
+      // Error Messages
+      const errorInvalid = function (ele) {
+        document.querySelector(`.${ele}-invalid`).style.display = "block";
+        document.querySelector(`.${ele}-empty`).style.display = "none";
+      };
+      const errorEmpty = function (ele) {
+        document.querySelector(`.${ele}-invalid`).style.display = "none";
+        document.querySelector(`.${ele}-empty`).style.display = "block";
+      };
+      const errorFix = function (ele) {
+        document.querySelector(`.${ele}-invalid`).style.display = "none";
+        document.querySelector(`.${ele}-empty`).style.display = "none";
+      };
+
+      const error = function () {
+        for (let i = 0; i < 3; i++) {
+          document.querySelectorAll(".err")[i].style.color = "red";
+          document.querySelectorAll("input")[i].style.borderColor = "red";
+        }
+      };
+
+      let daysInMonth;
+      function calculateAge() {
+        // Input Values
+        const inputDate = Number(document.querySelector(".dd").value);
+        const inputMonth = Number(document.querySelector(".mm").value);
+        const inputYear = Number(document.querySelector(".yy").value);
+        const inputYearLeapYear = !(inputYear % 4);
+
+        const [days, months, years] = [
+          document.getElementById("calculated-days"),
+          document.getElementById("calculated-months"),
+          document.getElementById("calculated-years"),
+        ];
+
+        // Calculated Years
+        const ageYears =
+          currentYear - (currentMonth > inputMonth ? inputYear : inputYear + 1);
+
+        // Calculated Months
+        let ageMonths =
+          currentMonth < inputMonth
+            ? 12 - inputMonth + currentMonth
+            : currentMonth - inputMonth;
+
+        let ageDays;
+
+        if (inputYear > 0 && inputYear < currentYear && !(inputYear % 1)) {
+          if (inputMonth > 0 && inputMonth < 13 && !(inputMonth % 1)) {
+            switch (inputMonth) {
+              case 1:
+              case 3:
+              case 5:
+              case 7:
+              case 8:
+              case 10:
+              case 12:
+                daysInMonth = 31;
+                break;
+
+              case 2:
+                if (inputYearLeapYear) {
+                  daysInMonth = 29;
+                } else {
+                  daysInMonth = 28;
+                }
+
+              case 4:
+              case 6:
+              case 9:
+              case 11:
+                daysInMonth = 30;
+                break;
+            }
+
+            // Days Calculation
+            if (
+              inputDate > 0 &&
+              inputDate < daysInMonth + 1 &&
+              !(inputDate % 1)
+            ) {
+              if (inputDate > currentDate) {
+                ageMonths -= 1;
+
+                ageDays = daysInMonth - inputDate + currentDate;
+              } else {
+                ageDays = currentDate - inputDate;
+              }
+
+              days.innerHTML = ageDays;
+              months.innerHTML = ageMonths;
+              years.innerHTML = ageYears;
+
+              // Error Removal
+              for (let i = 0; i < 3; i++) {
+                document.querySelectorAll(".label")[i].style.color =
+                  "hsl(0, 1%, 44%)";
+                document.querySelectorAll("input")[i].style.borderColor =
+                  "hsl(0, 0%, 86%)";
+              }
+              errorFix("date");
+              errorFix("month");
+              errorFix("year");
+              document.querySelector(".year-future").style.display = "none";
+            }
+          }
+        } else if (inputYear > currentYear && !(inputYear % 1)) {
+        } else {
+        }
+
+        // Error Events
+        if (
+          !(inputYear > 0 && inputYear < currentYear && !(inputYear % 1)) ||
+          !(inputMonth > 0 && inputMonth < 13 && !(inputMonth % 1)) ||
+          !(inputDate > 0 && inputDate < daysInMonth + 1 && !(inputDate % 1))
+        ) {
+          error();
+          switch (true) {
+            case Boolean(inputYear > currentYear && !(inputYear % 1)):
+              document.querySelector(".year-future").style.display = "block";
+              errorFix("year");
+              break;
+
+            case Boolean(inputYear % 1):
+              errorInvalid("year");
+              break;
+
+            case Boolean(inputYear === 0):
+              errorEmpty("year");
+              break;
+
+            case Boolean(
+              inputYear > 0 && inputYear < currentYear && !(inputYear % 1)
+            ):
+              errorFix("year");
+              document.querySelector(".year-future").style.display = "none";
+
+              break;
+          }
+
+          switch (true) {
+            case Boolean(inputMonth > 12 || inputMonth % 1):
+              errorInvalid("month");
+              break;
+
+            case Boolean(inputMonth === 0):
+              errorEmpty("month");
+              break;
+
+            case Boolean(
+              inputMonth > 0 && inputMonth < 13 && !(inputMonth % 1)
+            ):
+              errorFix("month");
+              break;
+          }
+
+          switch (true) {
+            case Boolean(inputDate > daysInMonth || inputDate % 1):
+              errorInvalid("date");
+              break;
+
+            case Boolean(inputDate === 0):
+              errorEmpty("date");
+              break;
+
+            case Boolean(
+              inputDate > 0 && inputDate < daysInMonth + 1 && !(inputDate % 1)
+            ):
+              errorFix("date");
+              break;
+          }
+        }
+      }
+
+      document.addEventListener("keydown", function (e) {
+        if (e.code === "Enter") {
+          calculateAge();
+        }
+      });
+    </script>
+  </body>
+</html>
